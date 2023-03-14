@@ -1,0 +1,93 @@
+{
+    "function": {
+        "id": "fun1",
+        "name": "Movement",
+        "description": "Device XYZ's primary function is to assist the surgeon during the procedure by providing precise movement and control over surgical instruments. The use of a servo motor allows for more accurate movements and finer control over the surgical procedure."
+    },
+    "hazard": {
+        "id": "haz1",
+        "name": "Ignition",
+        "description": "The hazard associated with Device XYZ is ignition, which could occur if the servo motor overheats or if there is a malfunction in the electrical components of the device. This hazard can cause significant harm to the patient and surgical team, and it is essential to take steps to mitigate this risk."
+    },
+    "hazardousSituation": {
+        "id": "hazSit1",
+        "name": "Overheating",
+        "description": "Overheating of Device XYZ can lead to a hazardous situation, such as ignition or malfunction, which can put the patient and surgical team at risk. In this case, the overheating caused the servo motor to ignite and burn the patient's skin, leading to additional complications during the procedure."
+    },
+    "deviceComponent": {
+        "id": "devComp1",
+        "name": "Servo motor",
+        "description": "The servo motor is a critical component of Device XYZ as it allows for precise movement and control over surgical instruments. It is designed to be reliable and durable, but regular maintenance and monitoring are necessary to ensure it functions correctly and does not overheat."
+    },
+    "risk": {
+        "harm": {
+            "id": "harm1",
+            "name": "Skin burn",
+            "description": "The ignition of the servo motor can cause significant harm to the patient, resulting in skin burns that can lead to additional complications during the surgical procedure. The harm caused by ignition can extend beyond the patient, affecting the surgical team and potentially causing damage to the hospital's equipment or facilities."
+        },
+        "probability": "high",
+        "severity": "high",
+        "deviceContext": {
+            "id": "context1",
+            "name": "General using context",
+            "description": "Device XYZ is intended to be used normally during surgical procedures, but it is crucial to follow proper maintenance and monitoring procedures to ensure it functions correctly. This includes regular inspections, cleaning, and calibration to identify and address any potential issues before they become hazardous."
+        },
+        "postMitigationProbability": "low",
+        "postMitigationSeverity": "low"
+    },
+    "mitigation": [
+        {
+            "id": "topSda",
+            "name": "Maintaining the temperature within limits",
+            "description": "The temperature should never exceed the treshold of 90°C (194°F).",
+            "type": "riskSda",
+            "reference": null,
+            "top": true,
+            "implementationManifest": null,
+            "children": [
+                {
+                    "id": "childSda1",
+                    "name": "Drilling a Ø 50mm hole in the case",
+                    "description": "Drilling the hole will improve the airflow and cool down the device.",
+                    "type": "riskSda",
+                    "reference": null,
+                    "children": [
+                        {
+                            "id": "imp1",
+                            "name": "Technical documentation reference",
+                            "type": "implementationManifest"
+                        }
+                    ]
+                },
+                {
+                    "id": "childSda2",
+                    "name": "Limit the max. motor usage programatically.",
+                    "description": "Throw na exception whenever any submodule requires a higher power usage than 200W",
+                    "type": "riskSda",
+                    "reference": null,
+                    "children": [
+                        {
+                            "id": "imp2",
+                            "name": "Reference to a line of code",
+                            "type": "implementationManifest"
+                        }
+                    ]
+                },
+                {
+                    "id": "childSda3",
+                    "name": "Minimal distance to the next source of heat.",
+                    "description": "The next engine or other heat-generating device must not be placed closer than 15cm apart as described in ISO XXX.",
+                    "type": "assuranceSda",
+                    "reference": "ISO XXX",
+                    "children": [
+                        {
+                            "id": "imp3",
+                            "name": "Technical documentation reference",
+                            "type": "implementationManifest"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
