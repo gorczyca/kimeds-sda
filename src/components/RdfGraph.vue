@@ -6,7 +6,6 @@
 
 <script>
 import vis from 'vis'
-import * as rdflib from 'rdflib'
 import sdaJson from '/src/assets/sda.json'
 
 
@@ -31,31 +30,49 @@ export default {
     },
     methods: {
         draw() {
-            const initiallyHidden = true
+            const initiallyHidden = false
 
             const container = this.$refs.container;
+            const mitigationId = 'mitigation1'
             const rootNode = sdaJson.mitigation[0]
+            const mitigationNodeColor = '#cde6ff'
+            const importantNodeFontSize = 20
 
             // Create nodes and edges based on the tree data
-            this.addTreeNodesAndEdges(rootNode, this.nodes, this.edges, 2, initiallyHidden);
+            // TODO: modify it so that you can have more siblings of the root node
+            this.addTreeNodesAndEdges(rootNode, this.nodes, this.edges, 3, initiallyHidden);
+            const mitigationChildren = this.nodes.map((child) => child.id)
 
-            const children = this.nodes.get({
-                filter: function (item) {
-                    return item.id != rootNode.id
+
+            this.nodes.add({
+                id: mitigationId,
+                label: '<b>Mitigation</b>',
+                level: 2,
+                color: mitigationNodeColor,
+                font: {
+                    size: importantNodeFontSize
                 }
-            }).map((child) => child.id)
+            })
 
-            // show the root
-            this.nodes.update({ id: rootNode.id, hidden: false })
+            this.edges.add({
+                from: mitigationId,
+                to: rootNode.id
+            })
 
             // device specific hazard 
             const devSpecHazEntities = ['function', 'hazard', 'hazardousSituation', 'deviceComponent']
             const devSpecHazId = 'devSpecHaz1'
+            const devSpecHazColor = '#ebe5f5'
+
 
             this.nodes.add({
                 id: devSpecHazId,
-                label: 'Device specific hazard',
-                level: 1
+                label: '<b>Device specific hazard</b>',
+                level: 1,
+                color: devSpecHazColor,
+                font: {
+                    size: importantNodeFontSize
+                }
             })
 
             let devSpecHazChildren = []
@@ -64,9 +81,10 @@ export default {
                 devSpecHazChildren.push(entityId)
                 this.nodes.add({
                     id: entityId,
-                    label: `${this.camelToRegular(entity)}:\n${sdaJson[entity].name}`,
+                    label: `<i>(${this.camelToRegular(entity)})</i>\n<b>${sdaJson[entity].name}</b>`,
                     level: 0,
-                    hidden: initiallyHidden
+                    hidden: initiallyHidden,
+                    color: devSpecHazColor
                 })
                 this.edges.add({
                     from: devSpecHazId,
@@ -79,33 +97,47 @@ export default {
             const preProbSevId = 'preProbSev1'
             const postProbSevId = 'postProbSev1'
 
+            // colors
+            const postMitigationColor = '#cdffcd'
+            const preMitigationColor = '#ffb4b4'
+            const riskColor = '#f2f2f2'
             this.nodes.add([
                 {
                     id: riskId,
-                    label: 'Risk',
-                    level: 1
+                    label: '<b>Risk</b>',
+                    level: 1,
+                    font: {
+                        size: importantNodeFontSize
+                    },
+                    color: riskColor
                 }, {
                     id: sdaJson.risk.harm.id,
-                    label: `Harm:\n${sdaJson.risk.harm.name}`,
+                    label: `<i>(Harm)</i>\n<b>${sdaJson.risk.harm.name}</b>`,
                     level: 0,
-                    hidden: initiallyHidden
+                    hidden: initiallyHidden,
+                    color: riskColor
                 }, {
                     id: sdaJson.risk.deviceContext.id,
-                    label: `Device context:\n${sdaJson.risk.deviceContext.name}`,
+                    label: `<i>(Device context)</i>\n<b>${sdaJson.risk.deviceContext.name}</b>`,
+                    title: 'This will be a tooltip',
                     level: 0,
-                    hidden: initiallyHidden
+                    hidden: initiallyHidden,
+                    color: riskColor
+
 
                 }, {
                     id: preProbSevId,
-                    label: `Pre-mitigation\nProb: ${sdaJson.risk.probability}\nSev: ${sdaJson.risk.severity}`,
+                    label: `<i>(Pre-mitigation)</i>\n<b>Prob:${sdaJson.risk.probability}</b>\n<b>Sev: ${sdaJson.risk.severity}</b>`,
                     level: 0,
-                    hidden: initiallyHidden
+                    hidden: initiallyHidden,
+                    color: preMitigationColor
 
                 }, {
                     id: postProbSevId,
-                    label: `Post-mitigation\nProb: ${sdaJson.risk.postMitigationProbability}\nSev: ${sdaJson.risk.postMitigationSeverity}`,
+                    label: `<i>(Post-mitigation)</i>\n<b>Prob: ${sdaJson.risk.postMitigationProbability}</b>\n<b>Sev: ${sdaJson.risk.postMitigationSeverity}</b>`,
                     level: 0,
-                    hidden: initiallyHidden
+                    hidden: initiallyHidden,
+                    color: postMitigationColor
 
                 }])
 
@@ -127,11 +159,11 @@ export default {
             // connect the 3 entities
             this.edges.add([
                 {
-                    from: rootNode.id,
+                    from: mitigationId,
                     to: riskId
                 },
                 {
-                    from: rootNode.id,
+                    from: mitigationId,
                     to: devSpecHazId
                 },
                 {
@@ -145,9 +177,9 @@ export default {
 
 
 
-            this.toggleVisDict[rootNode.id] = {
+            this.toggleVisDict[mitigationId] = {
                 hidden: initiallyHidden,
-                children: children
+                children: mitigationChildren
             }
             this.toggleVisDict[riskId] = {
                 hidden: initiallyHidden,
@@ -165,11 +197,26 @@ export default {
             };
             // Create the network visualization
             const options = {
+                nodes: {
+                    shape: 'box',
+                    font: { multi: true, size: 16 },
+                    widthConstraint: { maximum: 150, minimum: 75 },
+                    heightConstraint: { minimum: 30 },
+                    margin: 10,
+                },
+                edges: {
+                    color: {
+                        inherit: false,
+                        color: 'black'
+                    }
+                },
                 physics: false,
                 height: '800px',
                 layout: {
                     hierarchical: {
+                        levelSeparation: 100,
                         direction: 'UD',
+                        nodeSpacing: 150
                     }
                 }
             };
@@ -180,11 +227,21 @@ export default {
 
         addTreeNodesAndEdges(node, nodes, edges, level, initiallyHidden = false) {
             // Add the current node to the nodes array
+
+            function getTypeColor(type) {
+                return type === 'implementationManifest' ? implementationManifestColor : type === 'assuranceSda' ? assuranceSdaColor : riskSdaColor
+            }
+
+            const implementationManifestColor = '#f1fbf1'
+            const riskSdaColor = '#cde6ff'
+            const assuranceSdaColor = '#ffffe7'
+
             nodes.add({
                 id: node.id,
-                label: node.name,
+                label: `<i>(${this.camelToRegular(node.type)})</i>\n<b>${node.name}</b>`,
                 level: level,
-                hidden: initiallyHidden
+                hidden: initiallyHidden,
+                color: getTypeColor(node.type),
             });
 
             // Add edges to parent nodes
@@ -192,7 +249,7 @@ export default {
                 node.children.forEach(child => {
                     edges.add({
                         from: node.id,
-                        to: child.id
+                        to: child.id,
                     });
 
                     // Recursively add child nodes and edges
@@ -206,7 +263,7 @@ export default {
             const nodeId = event.nodes[0]
             if (nodeId in this.toggleVisDict) {
                 let hidden = !this.toggleVisDict[nodeId].hidden
-                
+
                 this.toggleVisDict[nodeId].children.forEach(function (childId) {
                     nodes.update([{ id: childId, hidden: hidden }])
                 })
