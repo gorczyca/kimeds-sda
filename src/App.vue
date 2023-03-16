@@ -14,7 +14,9 @@ import Table from './components/Table.vue'
       <div class="logo left">
         <img src="./assets/img/kimeds_logo.png" alt="KIMedS logo" height="80px">
       </div>
-      <h3 class="title">Safe Design Arguments (SDA) — Digital Safety Exchange Format</h3>
+      <div class="title">
+        <h3>Safe Design Arguments (SDA) — Digital Safety Exchange Format</h3>
+      </div>
       <div class="logo right">
         <img src="./assets/img/iccl_logo.png" alt="Right logo" width="200px">
       </div>
@@ -49,37 +51,22 @@ export default {
 <style>
 header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* background-color: #f2f2f2; */
-  padding: 40px;
-  position: relative;
-  margin-bottom: 30px;
+  margin: 15px;
+
 }
 
-.logo {
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  top: 0;
-}
-
-.logo.left {
-  left: 0;
-}
-
-.logo.right {
-  right: 100px;
-}
 
 .title {
+  flex-grow: 2;
+  text-align: center;
   font-size: 20px;
+  /* font-size: 20px;
   font-weight: bold;
   text-align: center;
   margin: 0;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); */
 }
 
 
