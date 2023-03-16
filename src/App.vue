@@ -11,14 +11,14 @@ import Table from './components/Table.vue'
   <div>
 
     <header>
-      <div class="logo left">
+      <div class="logo">
         <img src="./assets/img/kimeds_logo.png" alt="KIMedS logo" height="80px">
       </div>
       <div class="title">
         <!-- <h3>KIMEDS</h3> -->
         <h3>Safe Design Arguments (SDA) — Digital Safety Exchange Format</h3>
       </div>
-      <div class="logo right">
+      <div class="logo">
         <img src="./assets/img/iccl_logo.png" alt="Right logo" width="200px">
       </div>
     </header>
@@ -70,6 +70,9 @@ header {
   transform: translateX(-50%); */
 }
 
+.logo {
+  min-width: 200px;
+}
 
 /* */
 
