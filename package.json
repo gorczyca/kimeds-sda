@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "electron:start": "electron ."
+    "electron:start": "electron .",
+    "electron:build": "electron-packager . kimeds-sda --platform=win32,darwin,linux --arch=x64 --icon=dist/favicon.ico --overwrite"
   },
   "dependencies": {
     "@highlightjs/vue-plugin": "^2.1.0",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "electron": "^23.1.4",
+    "electron-packager": "^17.1.1",
     "vite": "^4.1.4"
   }
 }
