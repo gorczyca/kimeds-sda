@@ -14,5 +14,6 @@ export default defineConfig({
     }
   },
   // base: '/kimeds-sda/',
-  base: path.resolve(__dirname, './dist')
+  // base: path.resolve(__dirname, './dist')
+   base: './'
 })
